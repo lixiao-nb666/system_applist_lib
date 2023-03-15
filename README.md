@@ -1,5 +1,5 @@
 # system_applist_lib
-
+[![](https://jitpack.io/v/lixiao-nb666/system_applist_lib.svg)](https://jitpack.io/#lixiao-nb666/system_applist_lib)
 
 第一步必须加上权限
 
