@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.newbee.system_applist_lib.systemapp.PackageManagerUtil;
+import com.newbee.system_applist_lib.systemapp.bean.ResultSystemAppInfoBean;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerObserver;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerSubscriptionSubject;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerType;
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
         public void update(PackageManagerType eventBs, Object object) {
             switch (eventBs){
                 case GET_SYSTEM_APPS:
-                    Log.i("kankanshuju","kankanshujuzenmehuishi:"+object);
+                    ResultSystemAppInfoBean resultSystemAppInfoBean= (ResultSystemAppInfoBean) object;
+                    Log.i("kankanlist","kankanlistdata:"+resultSystemAppInfoBean);
                     break;
                 case ERR:
                     break;

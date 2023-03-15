@@ -103,13 +103,18 @@ public class PackageManagerUtil {
 
 
     private ResultSystemAppInfoBean resultSystemAppInfoBean;
+    private boolean threadIsRun=false;
     public void toGetSystemApps() {
         if(initOk==false){
+            return;
+        }
+        if(threadIsRun){
             return;
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
+                threadIsRun=true;
                 resultSystemAppInfoBean= new ResultSystemAppInfoBean();
                 List<ResolveInfo> resolveInfoList = getResolveInfos();
                 Log.i("kankan","chaxunyixia1:"+resolveInfoList);
@@ -149,6 +154,7 @@ public class PackageManagerUtil {
                     }
                 }
                 PackageManagerSubscriptionSubject.getInstance().update(PackageManagerType.GET_SYSTEM_APPS, resultSystemAppInfoBean);
+                threadIsRun=false;
             }
         }).start();
     }
