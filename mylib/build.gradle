@@ -27,5 +27,5 @@ android {
 
 dependencies {
 
-    implementation 'com.github.lixiao-nb666:sava_data_lib:1.0.0'
+//    implementation 'com.github.lixiao-nb666:sava_data_lib:1.0.0'
 }

@@ -14,9 +14,6 @@ import com.newbee.system_applist_lib.systemapp.bean.ResultSystemAppInfoBean;
 import com.newbee.system_applist_lib.systemapp.bean.SystemAppInfoBean;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerSubscriptionSubject;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerType;
-import com.newbee.system_applist_lib.systemapp.share.AppInfoShare;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +22,7 @@ public class PackageManagerUtil {
     private static PackageManagerUtil managerUtil;
     private boolean initOk=false;
     private PackageManager manager;
-    private AppInfoShare appInfoShare;
+//    private AppInfoShare appInfoShare;
     private List<String> needHidePackList;
     private Map<String,Integer> sortMap;//键值是包名，v值是排序的位置
 
@@ -50,7 +47,7 @@ public class PackageManagerUtil {
         manager = context.getApplicationContext().getPackageManager();
         this.needHidePackList=needHidePackList;
         this.sortMap=sortMap;
-        appInfoShare=new AppInfoShare(context.getApplicationContext());
+//        appInfoShare=new AppInfoShare(context.getApplicationContext());
         initOk=true;
     }
 
@@ -64,14 +61,14 @@ public class PackageManagerUtil {
             sortMap.clear();
             sortMap=null;
         }
-        appInfoShare=null;
+//        appInfoShare=null;
         initOk=false;
     }
 
 
-    public AppInfoShare getAppInfoShare() {
-        return appInfoShare;
-    }
+//    public AppInfoShare getAppInfoShare() {
+//        return appInfoShare;
+//    }
 
     public Drawable getIcon(String packageName) {
         if(initOk==false){
