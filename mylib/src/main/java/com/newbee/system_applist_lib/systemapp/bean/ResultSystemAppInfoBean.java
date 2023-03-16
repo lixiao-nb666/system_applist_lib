@@ -2,8 +2,7 @@ package com.newbee.system_applist_lib.systemapp.bean;
 
 import android.text.TextUtils;
 
-import com.newbee.system_applist_lib.systemapp.PackageManagerUtil;
-import com.newbee.system_applist_lib.systemapp.share.AppInfoShare;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
