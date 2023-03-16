@@ -7,7 +7,7 @@ package com.newbee.system_applist_lib.systemapp.bean;
 
 
 
-import com.newbee.system_applist_lib.systemapp.share.AppInfoShare;
+
 
 import java.io.Serializable;
 
