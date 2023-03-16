@@ -40,4 +40,21 @@
 
     PackageManagerUtil.getInstance().close();
     PackageManagerSubscriptionSubject.getInstance().removeObserver(observer);
+
+
+如果需要系统安装和卸载事件，添加一个广播即可
+<receiver
+    android:name="com.newbee.system_applist_lib.systemapp.broadcastreceiver.SystemAppReceiver"
+    android:enabled="true"
+    android:exported="true">
+    <intent-filter>
+    <action android:name="android.intent.action.PACKAGE_ADDED"></action>
+    <action android:name="android.intent.action.PACKAGE_CHANGED"></action>
+    <action android:name="android.intent.action.PACKAGE_REMOVED"></action>
+    <action android:name="android.intent.action.PACKAGE_REPLACED"></action>
+    <action android:name="android.intent.action.PACKAGE_RESTARTED"></action>
+    <action android:name="android.intent.action.PACKAGE_INSTALL"></action>
+    <data android:scheme="package"></data>
+</intent-filter>
+</receiver>
  
