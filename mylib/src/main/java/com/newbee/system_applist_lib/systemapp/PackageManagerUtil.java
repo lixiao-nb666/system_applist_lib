@@ -25,6 +25,7 @@ public class PackageManagerUtil {
 //    private AppInfoShare appInfoShare;
     private List<String> needHidePackList;
     private Map<String,Integer> sortMap;//键值是包名，v值是排序的位置
+    private Map<String,Integer> sortFuzzyNameMap;//键值是模糊匹配的软件名称，v值是排序的位置
 
 
     private PackageManagerUtil() {
@@ -43,10 +44,11 @@ public class PackageManagerUtil {
 
 
 
-    public void init(Context context,List<String> needHidePackList,Map<String,Integer> sortMap){
+    public void init(Context context,List<String> needHidePackList,Map<String,Integer> sortMap,Map<String,Integer> sortFuzzyNameMap){
         manager = context.getApplicationContext().getPackageManager();
         this.needHidePackList=needHidePackList;
         this.sortMap=sortMap;
+        this.sortFuzzyNameMap=sortFuzzyNameMap;
 //        appInfoShare=new AppInfoShare(context.getApplicationContext());
         initOk=true;
     }
@@ -61,6 +63,11 @@ public class PackageManagerUtil {
             sortMap.clear();
             sortMap=null;
         }
+        if(null!=sortFuzzyNameMap){
+            sortFuzzyNameMap.clear();
+            sortFuzzyNameMap=null;
+        }
+
 //        appInfoShare=null;
         initOk=false;
     }
@@ -76,6 +83,7 @@ public class PackageManagerUtil {
         }
 
         try {
+
             return manager.getApplicationIcon(packageName);
         } catch (Exception e) {
             return null;
@@ -125,6 +133,7 @@ public class PackageManagerUtil {
                         String pkg = resolveInfo.activityInfo.packageName;
                         String cls = resolveInfo.activityInfo.name;
                         ApplicationInfo applicationInfo = manager.getPackageInfo(pkg, i).applicationInfo;
+
                         String name = applicationInfo.loadLabel(manager).toString();
                         if (TextUtils.isEmpty(name) ) {
                             continue;
@@ -132,8 +141,6 @@ public class PackageManagerUtil {
                         if(null!=needHidePackList&&needHidePackList.size()>0&&needHidePackList.contains(pkg)){
                             continue;
                         }
-
-
                         SystemAppInfoBean app = new SystemAppInfoBean();
                         app.setName(name);
                         app.setPakeageName(pkg);
@@ -142,6 +149,11 @@ public class PackageManagerUtil {
                         if(null!=sortMap&&null!=sortMap.get(app.getPakeageName())){
                             int index=sortMap.get(app.getPakeageName());
                             app.setIndex(index);
+                        }else if(null!=sortFuzzyNameMap&&!TextUtils.isEmpty(app.getName())){
+                            int index=getIndexBysortFuzzyName(app.getName());
+                            if(index!=-1){
+                                app.setIndex(index);
+                            }
                         }
                         resultSystemAppInfoBean.add(app);
                         resultSystemAppInfoBean.sort();
@@ -152,6 +164,18 @@ public class PackageManagerUtil {
                 }
                 PackageManagerSubscriptionSubject.getInstance().update(PackageManagerType.GET_SYSTEM_APPS, resultSystemAppInfoBean);
                 threadIsRun=false;
+            }
+
+            private int getIndexBysortFuzzyName(String appName){
+                try {
+                    for(String name:sortFuzzyNameMap.keySet()){
+                        if(appName.contains(name)){
+                            return sortFuzzyNameMap.get(name);
+                        }
+                    }
+                }catch (Exception e){
+                }
+                return -1;
             }
         }).start();
     }

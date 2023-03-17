@@ -42,10 +42,11 @@ public class MainActivity extends AppCompatActivity {
         needHidePack.add("com.huawei.appmarket");
         needHidePack.add("com.huawei.android.ds");
         Map<String,Integer> sortMap=new HashMap<>();
-        sortMap.put("com.android.soundrecorder",11);
-        sortMap.put("com.android.deskclock",1);
-        sortMap.put("com.newbee.aip.asrwakeup3",1);
-        PackageManagerUtil.getInstance().init(this,needHidePack,sortMap);
+
+        Map<String,Integer> sortFuzzyNameMap=new HashMap<>();
+        sortFuzzyNameMap.put("UC",2);
+        sortFuzzyNameMap.put("_lib",1);
+        PackageManagerUtil.getInstance().init(this,needHidePack,sortMap,sortFuzzyNameMap);
         PackageManagerUtil.getInstance().toGetSystemApps();
     }
 
