@@ -41,6 +41,10 @@
     PackageManagerUtil.getInstance().close();
     PackageManagerSubscriptionSubject.getInstance().removeObserver(observer);
 
+注意点：
+PackageManagerUtil.getInstance().setReceiverGetAppList(true);
+该方法设置为:true时候，自动去获取系统的应用列表，然后发送出来
+
 
 如果需要系统安装和卸载事件，添加一个广播即可
 <receiver
@@ -57,5 +61,12 @@
     <data android:scheme="package"></data>
 </intent-filter>
 </receiver>
-/
+注意:
+    安卓8.0以上该广播，不接收静态注册的方式，修正为代码注册
+SystemAppReceiverUtil systemAppReceiverUtil=new SystemAppReceiverUtil();
+启动
+systemAppReceiverUtil.start(this);
+关闭
+systemAppReceiverUtil.close(this);
+
  
