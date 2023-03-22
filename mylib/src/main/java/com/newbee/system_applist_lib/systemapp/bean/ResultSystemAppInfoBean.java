@@ -3,6 +3,7 @@ package com.newbee.system_applist_lib.systemapp.bean;
 import android.text.TextUtils;
 
 
+import com.newbee.system_applist_lib.systemapp.util.ChineseToSpell;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -117,10 +118,14 @@ public class ResultSystemAppInfoBean implements Serializable {
             public int compare(SystemAppInfoBean o1, SystemAppInfoBean o2) {
                 if(o1.getIndex()>o2.getIndex()){
                     return 1;
+                }else if(o1.getIndex()==o2.getIndex()){
+                       return o1.getName().compareTo(o2.getName());
                 }else {
                     return -1;
                 }
             }
+
+
         });
     }
 
