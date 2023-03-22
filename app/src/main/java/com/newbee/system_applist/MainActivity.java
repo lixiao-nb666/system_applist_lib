@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.newbee.system_applist_lib.systemapp.PackageManagerUtil;
 import com.newbee.system_applist_lib.systemapp.bean.ResultSystemAppInfoBean;
+import com.newbee.system_applist_lib.systemapp.broadcastreceiver.SystemAppReceiverUtil;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerObserver;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerSubscriptionSubject;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerType;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private PackageManagerObserver observer=new PackageManagerObserver() {
         @Override
         public void update(PackageManagerType eventBs, Object object) {
+            Log.i("kankanlist","kankanlistdata:"+eventBs+"-----"+object);
             switch (eventBs){
                 case GET_SYSTEM_APPS:
                     ResultSystemAppInfoBean resultSystemAppInfoBean= (ResultSystemAppInfoBean) object;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
+    SystemAppReceiverUtil systemAppReceiverUtil=new SystemAppReceiverUtil();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
         sortFuzzyNameMap.put("UC",2);
         sortFuzzyNameMap.put("_lib",1);
         PackageManagerUtil.getInstance().init(this,needHidePack,sortMap,sortFuzzyNameMap);
+        PackageManagerUtil.getInstance().setReceiverGetAppList(true);
         PackageManagerUtil.getInstance().toGetSystemApps();
+        systemAppReceiverUtil.start(this);
     }
 
     @Override
@@ -55,5 +59,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         PackageManagerUtil.getInstance().close();
         PackageManagerSubscriptionSubject.getInstance().removeObserver(observer);
+        systemAppReceiverUtil.close(this);
     }
 }

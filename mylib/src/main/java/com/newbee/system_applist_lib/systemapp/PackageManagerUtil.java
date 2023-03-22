@@ -81,7 +81,6 @@ public class PackageManagerUtil {
         if(initOk==false){
             return null;
         }
-
         try {
 
             return manager.getApplicationIcon(packageName);
@@ -103,13 +102,20 @@ public class PackageManagerUtil {
     }
 
 
+    private boolean receiverGetAppList=false;
 
+    public boolean isReceiverGetAppList() {
+        return receiverGetAppList;
+    }
 
-
+    public void setReceiverGetAppList(boolean receiverGetAppList) {
+        this.receiverGetAppList = receiverGetAppList;
+    }
 
     private ResultSystemAppInfoBean resultSystemAppInfoBean;
     private boolean threadIsRun=false;
     public void toGetSystemApps() {
+        Log.i("kankan","chaxunyixia0:"+System.currentTimeMillis());
         if(initOk==false){
             return;
         }
