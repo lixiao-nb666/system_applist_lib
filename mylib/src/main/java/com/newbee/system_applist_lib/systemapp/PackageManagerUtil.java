@@ -3,13 +3,11 @@ package com.newbee.system_applist_lib.systemapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
+
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
-
 import com.newbee.system_applist_lib.systemapp.bean.ResultSystemAppInfoBean;
 import com.newbee.system_applist_lib.systemapp.bean.SystemAppInfoBean;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerSubscriptionSubject;
@@ -115,7 +113,7 @@ public class PackageManagerUtil {
     private ResultSystemAppInfoBean resultSystemAppInfoBean;
     private boolean threadIsRun=false;
     public void toGetSystemApps() {
-        Log.i("kankan","chaxunyixia0:"+System.currentTimeMillis());
+
         if(initOk==false){
             return;
         }
@@ -127,8 +125,9 @@ public class PackageManagerUtil {
             public void run() {
                 threadIsRun=true;
                 resultSystemAppInfoBean= new ResultSystemAppInfoBean();
+
                 List<ResolveInfo> resolveInfoList = getResolveInfos();
-                Log.i("kankan","chaxunyixia1:"+resolveInfoList);
+
                 if (resolveInfoList == null || resolveInfoList.size() == 0) {
                     PackageManagerSubscriptionSubject.getInstance().update(PackageManagerType.ERR, "system app list is null!");
                     return;
@@ -139,14 +138,20 @@ public class PackageManagerUtil {
                         String pkg = resolveInfo.activityInfo.packageName;
                         String cls = resolveInfo.activityInfo.name;
                         ApplicationInfo applicationInfo = manager.getPackageInfo(pkg, i).applicationInfo;
-
                         String name = applicationInfo.loadLabel(manager).toString();
-                        if (TextUtils.isEmpty(name) ) {
+                        if (TextUtils.isEmpty(pkg)||TextUtils.isEmpty(name) ) {
+
                             continue;
                         }
                         if(null!=needHidePackList&&needHidePackList.size()>0&&needHidePackList.contains(pkg)){
+
                             continue;
                         }
+                        if(resultSystemAppInfoBean.checkIsExist(pkg,cls)){
+
+                            continue;
+                        }
+
                         SystemAppInfoBean app = new SystemAppInfoBean();
                         app.setName(name);
                         app.setPakeageName(pkg);
@@ -163,9 +168,9 @@ public class PackageManagerUtil {
                         }
                         resultSystemAppInfoBean.add(app);
                         resultSystemAppInfoBean.sort();
-                        Log.i("kankan","chaxunyixia2:"+app.getPakeageName()+"--"+app.getName()+"--"+app.getIndex());
+
                     } catch (Exception e) {
-                        Log.i("kankan","chaxunyixia3:"+e.toString());
+
                     }
                 }
                 PackageManagerSubscriptionSubject.getInstance().update(PackageManagerType.GET_SYSTEM_APPS, resultSystemAppInfoBean);

@@ -164,4 +164,20 @@ public class ResultSystemAppInfoBean implements Serializable {
         }
         return null;
     }
+
+    public boolean checkIsExist(String pck,String indexClass){
+        try {
+
+            for(SystemAppInfoBean appInfo:appList){
+                if(pck.equals(appInfo.getPakeageName())&&indexClass.equals(appInfo.getIndexActivityClass())){
+                    return true;
+                }
+            }
+
+        }catch (Exception e){
+
+        }
+
+        return false;
+    }
 }
