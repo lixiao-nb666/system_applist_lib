@@ -1,6 +1,7 @@
 package com.newbee.system_applist;
 
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 
 
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.newbee.system_applist_lib.systemapp.PackageManagerUtil;
 import com.newbee.system_applist_lib.systemapp.bean.ResultSystemAppInfoBean;
+import com.newbee.system_applist_lib.systemapp.bean.SystemAppInfoBean;
 import com.newbee.system_applist_lib.systemapp.broadcastreceiver.SystemAppReceiverUtil;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerObserver;
 import com.newbee.system_applist_lib.systemapp.observer.PackageManagerSubscriptionSubject;
@@ -28,7 +30,12 @@ public class MainActivity extends AppCompatActivity {
             switch (eventBs){
                 case GET_SYSTEM_APPS:
                     ResultSystemAppInfoBean resultSystemAppInfoBean= (ResultSystemAppInfoBean) object;
-                    Log.i("kankanlist","kankanlistdata:"+resultSystemAppInfoBean);
+                    for(SystemAppInfoBean systemAppInfoBean:resultSystemAppInfoBean.getAppList()){
+                        Log.i("kankanlist","kankanlistdata:"+systemAppInfoBean.getName()+"---------"+systemAppInfoBean.getPakeageName()+"!!!("+systemAppInfoBean.getIconRs());
+                    }
+
+
+
                     break;
                 case ERR:
                     break;
@@ -48,7 +55,21 @@ public class MainActivity extends AppCompatActivity {
         Map<String,Integer> sortFuzzyNameMap=new HashMap<>();
         sortFuzzyNameMap.put("UC",2);
         sortFuzzyNameMap.put("_lib",1);
-        PackageManagerUtil.getInstance().init(this,needHidePack,sortMap,sortFuzzyNameMap);
+
+        Map<String,String> usePckChangeNameMap=new ArrayMap<>();
+        usePckChangeNameMap.put("cm.aptoidetv.pt","12345");
+        usePckChangeNameMap.put("com.opera.browser","Opera Browser");
+        Map<String,String> useNameChangeNameMap=new ArrayMap<>();
+        useNameChangeNameMap.put("MyW User Guide","87489279347");
+        Map<String,String> nameReplaceMap=new ArrayMap<>();//键值是名称中包含的字符串，V值是需要替换成的字符串
+        nameReplaceMap.put("TV","");
+        nameReplaceMap.put(" TV","");
+        nameReplaceMap.put("TV ","");
+
+        Map<String,Integer> usePckChangeIconMap=new ArrayMap<>();
+        usePckChangeIconMap.put("cm.aptoidetv.pt",R.mipmap.ic_launcher);
+
+        PackageManagerUtil.getInstance().init(this,needHidePack,sortMap,sortFuzzyNameMap,usePckChangeNameMap,useNameChangeNameMap,nameReplaceMap,usePckChangeIconMap);
         PackageManagerUtil.getInstance().setReceiverGetAppList(true);
         PackageManagerUtil.getInstance().toGetSystemApps();
         systemAppReceiverUtil.start(this);

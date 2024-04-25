@@ -24,6 +24,11 @@ public class PackageManagerUtil {
     private List<String> needHidePackList;
     private Map<String,Integer> sortMap;//键值是包名，v值是排序的位置
     private Map<String,Integer> sortFuzzyNameMap;//键值是模糊匹配的软件名称，v值是排序的位置
+    private Map<String,String> usePckChangeNameMap;//键值是包名，V值是需要替换成的名称
+    private Map<String,String> useNameChangeNameMap;//键值是名称，V值是需要替换成的名称
+    private Map<String,String> nameReplaceMap;//键值是名称中包含的字符串，V值是需要替换成的字符串
+    private Map<String,Integer> usePckChangeIconMap;//键值是名称，V值是需要替换成的ICON
+
 
 
     private PackageManagerUtil() {
@@ -42,11 +47,15 @@ public class PackageManagerUtil {
 
 
 
-    public void init(Context context,List<String> needHidePackList,Map<String,Integer> sortMap,Map<String,Integer> sortFuzzyNameMap){
+    public void init(Context context,List<String> needHidePackList,Map<String,Integer> sortMap,Map<String,Integer> sortFuzzyNameMap,Map<String,String> usePckChangeNameMap,Map<String,String> useNameChangeNameMap,  Map<String,String> nameReplaceMap,Map<String,Integer> usePckChangeIconMap){
         manager = context.getApplicationContext().getPackageManager();
         this.needHidePackList=needHidePackList;
         this.sortMap=sortMap;
         this.sortFuzzyNameMap=sortFuzzyNameMap;
+        this.usePckChangeNameMap=usePckChangeNameMap;
+        this.useNameChangeNameMap=useNameChangeNameMap;
+        this.nameReplaceMap=nameReplaceMap;
+        this.usePckChangeIconMap=usePckChangeIconMap;
 //        appInfoShare=new AppInfoShare(context.getApplicationContext());
         initOk=true;
     }
@@ -140,41 +149,42 @@ public class PackageManagerUtil {
                         ApplicationInfo applicationInfo = manager.getPackageInfo(pkg, i).applicationInfo;
                         String name = applicationInfo.loadLabel(manager).toString();
                         if (TextUtils.isEmpty(pkg)||TextUtils.isEmpty(name) ) {
-
                             continue;
                         }
                         if(null!=needHidePackList&&needHidePackList.size()>0&&needHidePackList.contains(pkg)){
-
                             continue;
                         }
                         if(resultSystemAppInfoBean.checkIsExist(pkg,cls)){
-
                             continue;
                         }
-
                         SystemAppInfoBean app = new SystemAppInfoBean();
-                        app.setName(name);
+                        app.setName(getName(name,pkg));
                         app.setPakeageName(pkg);
                         app.setIndexActivityClass(cls);
-                        app.setIconRs(resolveInfo.getIconResource());
-                        if(null!=sortMap&&null!=sortMap.get(app.getPakeageName())){
-                            int index=sortMap.get(app.getPakeageName());
+                        int index=getIndex(app);
+                        if(index!=-1){
                             app.setIndex(index);
-                        }else if(null!=sortFuzzyNameMap&&!TextUtils.isEmpty(app.getName())){
-                            int index=getIndexBysortFuzzyName(app.getName());
-                            if(index!=-1){
-                                app.setIndex(index);
-                            }
                         }
+                        int iconRs=getIconRs(pkg);
+
+                        app.setIconRs(iconRs);
                         resultSystemAppInfoBean.add(app);
                         resultSystemAppInfoBean.sort();
-
                     } catch (Exception e) {
 
                     }
                 }
                 PackageManagerSubscriptionSubject.getInstance().update(PackageManagerType.GET_SYSTEM_APPS, resultSystemAppInfoBean);
                 threadIsRun=false;
+            }
+
+            private int getIndex(SystemAppInfoBean app){
+                if(null!=sortMap&&null!=sortMap.get(app.getPakeageName())){
+                    return sortMap.get(app.getPakeageName());
+                }else if(null!=sortFuzzyNameMap&&!TextUtils.isEmpty(app.getName())){
+                    return getIndexBysortFuzzyName(app.getName());
+                }
+                return -1;
             }
 
             private int getIndexBysortFuzzyName(String appName){
@@ -187,6 +197,41 @@ public class PackageManagerUtil {
                 }catch (Exception e){
                 }
                 return -1;
+            }
+
+
+            private String getName(String name,String pck){
+                if(null!=usePckChangeNameMap&&usePckChangeNameMap.size()>0){
+                    String needName=usePckChangeNameMap.get(pck);
+                    if(!TextUtils.isEmpty(needName)){
+                        return needName;
+                    }
+                }
+                if(null!=useNameChangeNameMap&&useNameChangeNameMap.size()>0){
+                    String needName=useNameChangeNameMap.get(name);
+                    if(!TextUtils.isEmpty(needName)){
+                        return needName;
+                    }
+                }
+                if(null!=nameReplaceMap&&nameReplaceMap.size()>0){
+                    for(String k:nameReplaceMap.keySet()){
+                        if(name.contains(k)){
+                            return name.replace(k,nameReplaceMap.get(k));
+                        }
+                    }
+                }
+                return name;
+            }
+
+
+            private int getIconRs(String pck){
+                if(null!=usePckChangeIconMap&&usePckChangeIconMap.size()>0){
+                    Integer iconRs=usePckChangeIconMap.get(pck);
+                    if(null!=iconRs){
+                        return iconRs;
+                    }
+                }
+                return 0;
             }
         }).start();
     }

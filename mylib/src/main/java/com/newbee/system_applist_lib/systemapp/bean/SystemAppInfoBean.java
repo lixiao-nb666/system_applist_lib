@@ -18,7 +18,7 @@ public class SystemAppInfoBean implements Serializable {
     private String needStartClass;
     private int iconRs;
     private int index;
-    private int defIndex=9999;
+    private final int defIndex=9999;
 
     public SystemAppInfoBean() {
         index=defIndex;
@@ -70,7 +70,6 @@ public class SystemAppInfoBean implements Serializable {
         if(index<0){
             index=defIndex;
         }
-
         return index;
     }
 
