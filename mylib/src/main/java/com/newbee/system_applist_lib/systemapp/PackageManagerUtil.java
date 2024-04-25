@@ -74,6 +74,22 @@ public class PackageManagerUtil {
             sortFuzzyNameMap.clear();
             sortFuzzyNameMap=null;
         }
+        if(null!=usePckChangeNameMap){
+            usePckChangeNameMap.clear();
+            usePckChangeIconMap=null;
+        }
+        if(null!=useNameChangeNameMap){
+            useNameChangeNameMap.clear();
+            useNameChangeNameMap=null;
+        }
+        if(null!=nameReplaceMap){
+            nameReplaceMap.clear();
+            nameReplaceMap=null;
+        }
+        if(null!=usePckChangeIconMap){
+            usePckChangeIconMap.clear();
+            usePckChangeIconMap=null;
+        }
 
 //        appInfoShare=null;
         initOk=false;
