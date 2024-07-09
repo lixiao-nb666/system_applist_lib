@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 case GET_SYSTEM_APPS:
                     ResultSystemAppInfoBean resultSystemAppInfoBean= (ResultSystemAppInfoBean) object;
                     for(SystemAppInfoBean systemAppInfoBean:resultSystemAppInfoBean.getAppList()){
-                        Log.i("kankanlist","kankanlistdata:"+systemAppInfoBean.getName()+"---------"+systemAppInfoBean.getPakeageName()+"!!!("+systemAppInfoBean.getIconRs());
+                        Log.i("kankanlist","kankanlistdata:"+systemAppInfoBean.getName()+"---------"+systemAppInfoBean.getPakeageName()+"!!!("+systemAppInfoBean.getIndex());
                     }
 
 
@@ -51,7 +51,16 @@ public class MainActivity extends AppCompatActivity {
         needHidePack.add("com.huawei.appmarket");
         needHidePack.add("com.huawei.android.ds");
         Map<String,Integer> sortMap=new HashMap<>();
+        sortMap.put("com.mediatek.camera",0);
 
+        sortMap.put("cm.aptoidetv.pt",3);
+        sortMap.put("com.google.android.youtube.tv",3);
+        sortMap.put("com.instagram.android",5);
+        sortMap.put("com.amazon.avod.thirdpartyclient",6);
+        sortMap.put("com.tiktok.tv",7);
+        sortMap.put("com.xiaobaifile.tv",8);
+        sortMap.put("com.nrmyw.share_screen",9);
+        sortMap.put("com.android.settings",10);
         Map<String,Integer> sortFuzzyNameMap=new HashMap<>();
         sortFuzzyNameMap.put("UC",2);
         sortFuzzyNameMap.put("_lib",1);

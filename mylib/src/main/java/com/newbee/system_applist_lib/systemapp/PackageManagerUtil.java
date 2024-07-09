@@ -182,14 +182,12 @@ public class PackageManagerUtil {
                             app.setIndex(index);
                         }
                         int iconRs=getIconRs(pkg);
-
                         app.setIconRs(iconRs);
                         resultSystemAppInfoBean.add(app);
-                        resultSystemAppInfoBean.sort();
                     } catch (Exception e) {
-
                     }
                 }
+                resultSystemAppInfoBean.sort();
                 PackageManagerSubscriptionSubject.getInstance().update(PackageManagerType.GET_SYSTEM_APPS, resultSystemAppInfoBean);
                 threadIsRun=false;
             }
